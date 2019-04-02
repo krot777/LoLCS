@@ -2,21 +2,20 @@ Unicode true
 !define MUI_UI "./modern.exe"
 !include Sections.nsh
 !include MUI2.nsh
+!include x64.nsh
+!include "Registry.nsh"
 !insertmacro MUI_LANGUAGE English
-
 
 !define AppName "LoLUtil"
 !define AppVersion "1.0.3.0"
 !define AppDev "Shen440"
 !define COMPANY "Shen440"
 !define PRODUCT "lolutil"
-!define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "Header.bmp"
 
 
-RequestExecutionLevel user
+RequestExecutionLevel admin
 Name "${AppName}"
-ICON "lolutilicon.ico"
+ICON "images\Icon.ico"
 OutFile "${AppName}${AppVersion}.exe"
 SetOverwrite on
 
@@ -70,6 +69,7 @@ Var btnSave
 Var Status
 Var TextBoxStatus
 Var TextBoxStatusT
+Var Disabled1
 ; dialog create function
 Function form_1_Create
 
@@ -107,7 +107,7 @@ Function form_1_Create
 
 ;Group labels
   ; === lblDir ===
-  ${NSD_CreateLabel} 24.35u 78.77u 65.82u 14.15u "League of Legends Directory"
+  ${NSD_CreateLabel} 17.77u 72.62u 65.82u 20.31u "League of Legends Directory"
   Pop $lblDir
 
   ; === lblStatus  ===
@@ -136,6 +136,7 @@ Function form_1_Create
 ; === GroupBoxStatus ===
   ${NSD_CreateGroupBox} 7.9u 44.31u 178.38u 24.62u ""
   Pop $GroupBoxStatus
+
 ;== GroupBoxEnd
 
 
@@ -182,6 +183,7 @@ Function form_1_Create
 ${NSD_CreateButton} 18.43u 187.69u 45.42u 17.23u "Save"
   Pop $btnSave
   ${NSD_OnClick} $btnSave onClickSave
+   EnableWindow $btnSave 1
 
   ; === DropListRegion (type: DropList) ===
   ${NSD_CreateDropList} 18.43u 131.69u 156.66u 14.77u "Russia"
@@ -199,7 +201,7 @@ ${NSD_CreateButton} 18.43u 187.69u 45.42u 17.23u "Save"
   ${NSD_CB_AddString} $DropListRegion "Russia"
   ${NSD_CB_AddString} $DropListRegion "Turkey"
   ${NSD_CB_SelectString} $DropListRegion "Russia"
-  ${NSD_OnChange}  $DropListRegion DropListRegion.onchange
+  ${NSD_OnChange} $DropListRegion DropListRegion.onchange
 
   ; === DropListLng (type: DropList) ===
 ${NSD_CreateDropList} 18.43u 168u 156.66u 14.77u "Русский (Russia)"
@@ -225,7 +227,7 @@ ${NSD_CreateDropList} 18.43u 168u 156.66u 14.77u "Русский (Russia)"
   ${NSD_CB_AddString} $DropListLng "Romanian (Romania)"
   ${NSD_CB_AddString} $DropListLng "Turkish (Turkey)"
   ${NSD_CB_SelectString} $DropListLng "Русский (Russia)"
-  ${NSD_OnChange}  $DropListLng DropListLng.onchange
+  ${NSD_OnChange} $DropListLng DropListLng.onchange
 
 FunctionEnd
 
@@ -235,16 +237,25 @@ Function form_1_Show
   nsDialogs::Show
 FunctionEnd
 
+
+; =========================================================
+; dialog script ends
+; =========================================================
+
+
 Function onClickSave
+
+Call lblStatusChanged
 Call RegionCheck
 Call LngCheck
-Call lblStatusChanged
 Call Writeini
+
 FunctionEnd
 
 
 
 Function DirRequestClick
+
   Pop $R0
   ${If} $R0 == $DirRequestBtn
     ${NSD_GetText} $DirRequestTxt $R0
@@ -256,14 +267,12 @@ Function DirRequestClick
       ${NSD_SetText} $DirRequestTxt "$R0"
     ${EndIf}
   ${EndIf}
-
+  SendMessage $Disabled1 ${WM_SETTEXT} 0 "1"
     IfFileExists "$R0\LeagueClient.exe" +3
-    MessageBox MB_OK "Неправильный путь"
+    MessageBox MB_OK "Wrong Dir"
     abort
-    MessageBox MB_OK "Good"
+
 FunctionEnd
-
-
 
 
 
@@ -273,15 +282,13 @@ Function onClickKILL
 FunctionEnd
 
 Function lblStatusChanged
-Pop $0 # HWND
-SetCtlColors $TextBoxStatus 0x99B4D1 0xF0F0F0
   SendMessage $TextBoxStatus ${WM_SETTEXT} 0 "STR: SAVED"
 FunctionEnd
 
 Function LngCheck
-  ${If} $Lng == 0
-  StrCpy $Lng "cs_CZ"
-  ${Else}
+${If} $Lng == 0
+StrCpy $Lng "cs_CZ"
+${Else}
     ${If} $Lng == 1
   StrCpy $Lng "de_DE"
  ${Else}
@@ -354,14 +361,16 @@ Function LngCheck
  ${EndIf}
  ${EndIf}
  ${EndIf}
+
 FunctionEnd
 
 
 
 Function RegionCheck
  ${If} $Reg == 0
-  StrCpy $Reg "BR"
-     ${If} $Reg == 1
+StrCpy $Reg "BR"
+    ${Else}
+${If} $Reg == 1
   StrCpy $Reg "EUNE"
  ${Else}
       ${If} $Reg == 2
@@ -402,16 +411,29 @@ Function RegionCheck
  ${EndIf}
  ${EndIf}
  ${EndIf}
-
 FunctionEnd
-; =========================================================
-; dialog script ends here
-; =========================================================
 
+Function DropListLng.onchange
+  Pop $DropListLng
+   SendMessage $DropListLng ${CB_GETCURSEL} 0 0 $Lng
+FunctionEnd
+
+Function DropListRegion.onchange
+  Pop $DropListRegion
+    SendMessage $DropListRegion ${CB_GETCURSEL} 0 0 $Reg
+FunctionEnd
 
 
 
 Function Writeini
+${if} ${RunningX64}
+SetRegView 64
+WriteRegStr HKLM "Software\WOW6432Node\Riot Games, Inc\League of Legends" "Location" "$R0"
+${Else}
+SetRegView 32
+WriteRegStr HKLM "Software\Riot Games, Inc\League of Legends" "Location"  "$R0"
+${Endif}
+
 CreateDirectory "$R0\Config"
 FileOpen $0 "$R0\Config\LeagueClientSettings.yaml" w
 FileWrite $0 "install:$\r$\n"
@@ -429,64 +451,54 @@ FileWrite $0 "    npe-splash:$\r$\n"
 FileWrite $0 "        enableNewPlayerSplash: true$\r$\n"
 FileWrite $0 "    patcher:$\r$\n"
 FileClose $0
+
+
 FunctionEnd
 
 
-; show the dialog
 
   Page custom form_1_Show
 
 
 
-Function DropListLng.onchange
-        Pop $DropListLng
-        SendMessage $DropListLng ${CB_GETCURSEL} 0 0 $Lng
-FunctionEnd
 
-Function DropListRegion.onchange
-        Pop $DropListRegion
-        SendMessage $DropListRegion ${CB_GETCURSEL} 0 0 $Reg
-FunctionEnd
 
 
 Section main
+
 SectionEnd
 
 Function .onInit
-
-	InitPluginsDir
+InitPluginsDir
 StrCpy $Reg "RU"
 StrCpy $Lng "ru_RU"
    ;Get the skin file to use
-   File /oname=$PLUGINSDIR\Amakrits.vsf "Styles\CyanNight.vsf"
+   File /oname=$PLUGINSDIR\Amakrits.vsf "Styles\OnyxBlue.vsf"
    ;Load the skin using the LoadVCLStyleA function
    NSISVCLStyles::LoadVCLStyle $PLUGINSDIR\Amakrits.vsf
 
-Call DirRegistryFind
+Call FindDirReg
 !if "" != ""
   ; we're testing the uninstaller, so the installer only writes it and exits
   WriteUninstaller "%UNINSTALLER_FILENAME%"
   Quit
 !endif
 
-
-
-
-
-
-
-
-
-
 FunctionEnd
-Function DirRegistryFind
-ClearErrors
-SetRegView 32
-ReadRegStr $R0 HKLM "Software\Riot Games, Inc\League of Legends" "Location"
-SetRegView 64
-ReadRegStr $R0 HKLM "Software\Wow6432Node\Riot Games, Inc\League of Legends" "Location"
-StrCpy $DirRequestTxt $R0
-FunctionEnd
+
+
+
 Function un.onInit
 	InitPluginsDir
+FunctionEnd
+
+Function FindDirReg
+${if} ${RunningX64}
+SetRegView 64
+ReadRegStr $R0 HKLM "Software\WOW6432Node\Riot Games, Inc\League of Legends" "Location"
+${Else}
+SetRegView 32
+ReadRegStr $R0 HKLM "Software\Riot Games, Inc\League of Legends" "Location"
+${Endif}
+StrCpy $DirRequestTxt $R0
 FunctionEnd
