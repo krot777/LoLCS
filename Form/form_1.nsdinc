@@ -7,21 +7,42 @@
 
 ; handle variables
 Var hCtl_form_1
+Var hCtl_form_1_GroupBox3
+Var hCtl_form_1_Label1
+Var hCtl_form_1_ProgressBar1
+Var hCtl_form_1_GroupBoxStatus
+Var hCtl_form_1_btnLngApp
+Var hCtl_form_1_Bitmap1
+Var hCtl_form_1_Bitmap1_hImage
+Var hCtl_form_1_GroupBoxDIR
+Var hCtl_form_1_lblStatus
+Var hCtl_form_1_lblDir
+Var hCtl_form_1_DirRequest1_Txt
+Var hCtl_form_1_DirRequest1_Btn
+Var hCtl_form_1_GroupBoxSwichter
+Var hCtl_form_1_Bitmap3
+Var hCtl_form_1_Bitmap3_hImage
+Var hCtl_form_1_Bitmap2
+Var hCtl_form_1_Bitmap2_hImage
+Var hCtl_form_1_btnKill
 Var hCtl_form_1_lblRegion
 Var hCtl_form_1_lblLng
 Var hCtl_form_1_btnSave
 Var hCtl_form_1_DropListRegion
 Var hCtl_form_1_DropListLng
+Var hCtl_form_1_GroupBox1
 Var hCtl_form_1_Font1
 Var hCtl_form_1_Font2
+Var hCtl_form_1_Font3
 
 
 ; dialog create function
 Function fnc_form_1_Create
   
   ; custom font definitions
-  CreateFont $hCtl_form_1_Font1 "Microsoft Sans Serif" "14.25" "700"
-  CreateFont $hCtl_form_1_Font2 "Courier New" "12" "400"
+  CreateFont $hCtl_form_1_Font1 "Microsoft Sans Serif" "12" "700"
+  CreateFont $hCtl_form_1_Font2 "Courier New" "12" "700"
+  CreateFont $hCtl_form_1_Font3 "Courier New" "9.75" "400"
   
   ; === form_1 (type: Dialog) ===
   nsDialogs::Create 1018
@@ -31,25 +52,99 @@ Function fnc_form_1_Create
   ${EndIf}
   !insertmacro MUI_HEADER_TEXT "Dialog title..." "Dialog subtitle..."
   
+  ; === GroupBox3 (type: GroupBox) ===
+  ${NSD_CreateGroupBox} 7.9u 44.31u 178.38u 24.62u ""
+  Pop $hCtl_form_1_GroupBox3
+  
+  ; === Label1 (type: Label) ===
+  ${NSD_CreateLabel} 62.53u 51.08u 65.82u 14.15u "Label1"
+  Pop $hCtl_form_1_Label1
+  SendMessage $hCtl_form_1_Label1 ${WM_SETFONT} $hCtl_form_1_Font1 0
+  SetCtlColors $hCtl_form_1_Label1 0x99B4D1 0xF0F0F0
+  
+  ; === ProgressBar1 (type: ProgressBar) ===
+  ${NSD_CreateProgressBar} 18.43u 51.08u 156.66u 14.15u ""
+  Pop $hCtl_form_1_ProgressBar1
+  SetCtlColors $hCtl_form_1_ProgressBar1 0x0078D7 0xF0F0F0
+  
+  ; === GroupBoxStatus (type: GroupBox) ===
+  ${NSD_CreateGroupBox} 7.9u 1.23u 178.38u 43.08u ""
+  Pop $hCtl_form_1_GroupBoxStatus
+  
+  ; === btnLngApp (type: Button) ===
+  ${NSD_CreateButton} 17.77u 12.92u 27.65u 14.15u "ENG"
+  Pop $hCtl_form_1_btnLngApp
+  EnableWindow $hCtl_form_1_btnLngApp 0
+  
+  ; === Bitmap1 (type: Bitmap) ===
+  ${NSD_CreateBitmap} 11.85u 7.38u 170.48u 33.23u ""
+  Pop $hCtl_form_1_Bitmap1
+  File "/oname=$PLUGINSDIR\header.bmp" "C:\Users\Shen\Documents\Visual Studio 2012\Projects\LoLSeverSwichter\header.bmp"
+  ${NSD_SetImage} $hCtl_form_1_Bitmap1 "$PLUGINSDIR\header.bmp" $hCtl_form_1_Bitmap1_hImage
+  
+  ; === GroupBoxDIR (type: GroupBox) ===
+  ${NSD_CreateGroupBox} 7.9u 67.69u 178.38u 43.08u ""
+  Pop $hCtl_form_1_GroupBoxDIR
+  
+  ; === lblStatus (type: Label) ===
+  ${NSD_CreateLabel} 100.71u 78.77u 65.82u 14.15u "Label2"
+  Pop $hCtl_form_1_lblStatus
+  SetCtlColors $hCtl_form_1_lblStatus 0x696969 0xF0F0F0
+  
+  ; === lblDir (type: Label) ===
+  ${NSD_CreateLabel} 24.35u 78.77u 65.82u 14.15u "Label1"
+  Pop $hCtl_form_1_lblDir
+  
+  ; === DirRequest1_Txt (type: Text) ===
+  ${NSD_CreateText} 18.43u 94.77u 135.59u 12.31u "ds"
+  Pop $hCtl_form_1_DirRequest1_Txt
+  
+  ; === DirRequest1_Btn (type: Button) ===
+  ${NSD_CreateButton} 155.34u 94.77u 19.75u 12.31u "..."
+  Pop $hCtl_form_1_DirRequest1_Btn
+  ${NSD_OnClick} $hCtl_form_1_DirRequest1_Btn fnc_hCtl_form_1_DirRequest1_Click
+  
+  ; === GroupBoxSwichter (type: GroupBox) ===
+  ${NSD_CreateGroupBox} 7.9u 108.31u 178.38u 99.69u ""
+  Pop $hCtl_form_1_GroupBoxSwichter
+  ${NSD_OnChange} $hCtl_form_1_GroupBoxSwichter checkLoL
+  
+  ; === Bitmap3 (type: Bitmap) ===
+  ${NSD_CreateBitmap} 17.77u 148.31u 17.11u 16u ""
+  Pop $hCtl_form_1_Bitmap3
+  File "/oname=$PLUGINSDIR\locate.bmp" "C:\Users\Shen\Pictures\locate.bmp"
+  ${NSD_SetImage} $hCtl_form_1_Bitmap3 "$PLUGINSDIR\locate.bmp" $hCtl_form_1_Bitmap3_hImage
+  
+  ; === Bitmap2 (type: Bitmap) ===
+  ${NSD_CreateBitmap} 18.43u 114.46u 16.46u 13.54u ""
+  Pop $hCtl_form_1_Bitmap2
+  File "/oname=$PLUGINSDIR\google_map_satellite.bmp" "C:\Users\Shen\Pictures\google_map_satellite.bmp"
+  ${NSD_SetImage} $hCtl_form_1_Bitmap2 "$PLUGINSDIR\google_map_satellite.bmp" $hCtl_form_1_Bitmap2_hImage
+  
+  ; === btnKill (type: Button) ===
+  ${NSD_CreateButton} 121.11u 187.69u 45.42u 17.23u "Kill LOL"
+  Pop $hCtl_form_1_btnKill
+  ${NSD_OnClick} $hCtl_form_1_btnKill onClickKILL
+  
   ; === lblRegion (type: Label) ===
-  ${NSD_CreateLabel} 26.33u 5.54u 119.8u 20.31u "Region"
+  ${NSD_CreateLabel} 38.84u 114.46u 56.61u 13.54u "Region"
   Pop $hCtl_form_1_lblRegion
-  SendMessage $hCtl_form_1_lblRegion ${WM_SETFONT} $hCtl_form_1_Font1 0
+  SendMessage $hCtl_form_1_lblRegion ${WM_SETFONT} $hCtl_form_1_Font2 0
   
   ; === lblLng (type: Label) ===
-  ${NSD_CreateLabel} 26.33u 43.69u 119.8u 20.31u "Language"
+  ${NSD_CreateLabel} 38.84u 148.31u 67.14u 16u "Language"
   Pop $hCtl_form_1_lblLng
-  SendMessage $hCtl_form_1_lblLng ${WM_SETFONT} $hCtl_form_1_Font1 0
+  SendMessage $hCtl_form_1_lblLng ${WM_SETFONT} $hCtl_form_1_Font2 0
   
   ; === btnSave (type: Button) ===
-  ${NSD_CreateButton} 51.34u 95.38u 85.57u 25.85u "Save"
+  ${NSD_CreateButton} 18.43u 187.69u 45.42u 17.23u "Save"
   Pop $hCtl_form_1_btnSave
   ${NSD_OnClick} $hCtl_form_1_btnSave onClickSave
   
   ; === DropListRegion (type: DropList) ===
-  ${NSD_CreateDropList} 7.9u 25.85u 162.58u 16u "Russia"
+  ${NSD_CreateDropList} 18.43u 131.69u 156.66u 14.77u "Russia"
   Pop $hCtl_form_1_DropListRegion
-  SendMessage $hCtl_form_1_DropListRegion ${WM_SETFONT} $hCtl_form_1_Font2 0
+  SendMessage $hCtl_form_1_DropListRegion ${WM_SETFONT} $hCtl_form_1_Font3 0
   ${NSD_CB_AddString} $hCtl_form_1_DropListRegion "Brazil"
   ${NSD_CB_AddString} $hCtl_form_1_DropListRegion "EU Nordic and East"
   ${NSD_CB_AddString} $hCtl_form_1_DropListRegion "EU West"
@@ -63,9 +158,9 @@ Function fnc_form_1_Create
   ${NSD_CB_SelectString} $hCtl_form_1_DropListRegion "Russia"
   
   ; === DropListLng (type: DropList) ===
-  ${NSD_CreateDropList} 7.9u 65.85u 162.58u 16u "Русский (Russia)"
+  ${NSD_CreateDropList} 18.43u 168u 156.66u 14.77u "Русский (Russia)"
   Pop $hCtl_form_1_DropListLng
-  SendMessage $hCtl_form_1_DropListLng ${WM_SETFONT} $hCtl_form_1_Font2 0
+  SendMessage $hCtl_form_1_DropListLng ${WM_SETFONT} $hCtl_form_1_Font3 0
   ${NSD_CB_AddString} $hCtl_form_1_DropListLng "Czech (Czechia)"
   ${NSD_CB_AddString} $hCtl_form_1_DropListLng "German (Germany)"
   ${NSD_CB_AddString} $hCtl_form_1_DropListLng "Greek (Greece)"
@@ -87,10 +182,28 @@ Function fnc_form_1_Create
   ${NSD_CB_AddString} $hCtl_form_1_DropListLng "Turkish (Turkey)"
   ${NSD_CB_SelectString} $hCtl_form_1_DropListLng "Русский (Russia)"
   
+  ; === GroupBox1 (type: GroupBox) ===
+  ${NSD_CreateGroupBox} 1.97u -1.85u 195.49u 222.15u "GroupBox1"
+  Pop $hCtl_form_1_GroupBox1
+  
 FunctionEnd
 
 ; dialog show function
 Function fnc_form_1_Show
   Call fnc_form_1_Create
   nsDialogs::Show
+FunctionEnd
+
+
+; onClick handler for DirRequest Button $hCtl_form_1_DirRequest1_Btn
+Function fnc_hCtl_form_1_DirRequest1_Click
+	Pop $R0
+	${If} $R0 == $hCtl_form_1_DirRequest1_Btn
+		${NSD_GetText} $hCtl_form_1_DirRequest1_Txt $R0
+		nsDialogs::SelectFolderDialog /NOUNLOAD "" "$R0"
+		Pop $R0
+		${If} "$R0" != "error"
+			${NSD_SetText} $hCtl_form_1_DirRequest1_Txt "$R0"
+		${EndIf}
+	${EndIf}
 FunctionEnd

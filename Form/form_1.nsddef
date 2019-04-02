@@ -4,45 +4,64 @@ This file was created by NSISDialogDesigner 1.4.3.0
 http://coolsoft.altervista.org/nsisdialogdesigner
 Do not edit manually!
 -->
-<Dialog Name="form_1" Title="Dialog title..." Subtitle="Dialog subtitle...">
-  <Label Name="lblRegion" Location="40, 9" Size="182, 33" Text="Region" Font="Microsoft Sans Serif, 14.25pt, style=Bold" TabIndex="0" />
-  <Label Name="lblLng" Location="40, 71" Size="182, 33" Text="Language" Font="Microsoft Sans Serif, 14.25pt, style=Bold" TabIndex="1" />
-  <Button Name="btnSave" Location="78, 155" Size="130, 42" Text="Save" TabIndex="2" onClick="onClickSave" />
-  <DropList Name="DropListRegion" Location="12, 42" Size="247, 26" Font="Courier New, 12pt" TabIndex="3" SelectedItem="Russia">
-    <Items>
-      <value>Brazil</value>
-      <value>EU Nordic and East</value>
-      <value>EU West</value>
-      <value>Japan</value>
-      <value>Latin America North</value>
-      <value>Latin America South</value>
-      <value>North America</value>
-      <value>Oceania</value>
-      <value>Russia</value>
-      <value>Turkey</value>
-    </Items>
-  </DropList>
-  <DropList Name="DropListLng" Location="12, 107" Size="247, 26" Font="Courier New, 12pt" TabIndex="4" SelectedItem="Русский (Russia)">
-    <Items>
-      <value>Czech (Czechia)</value>
-      <value>German (Germany)</value>
-      <value>Greek (Greece)</value>
-      <value>English (Australia)</value>
-      <value>Русский (Russia)</value>
-      <value>English (United States)</value>
-      <value>English (United Kingdom)</value>
-      <value>Italian (Italy)</value>
-      <value>Spanish (Argentina)</value>
-      <value>Spanish (Spanish)</value>
-      <value>Spanish (Mexico)</value>
-      <value>French (Franch)</value>
-      <value>Hungarian (Hungary)</value>
-      <value>Japanese (Japan)</value>
-      <value>Korean (South Korea)</value>
-      <value>Polish (Poland)</value>
-      <value>Portuguese (Brazil)</value>
-      <value>Romanian (Romania)</value>
-      <value>Turkish (Turkey)</value>
-    </Items>
-  </DropList>
+<Dialog Name="form_1" Title="Dialog title..." DialogUI="custom" DialogID="1018" Size="314, 389" Subtitle="Dialog subtitle...">
+  <GroupBox Name="GroupBox3" Location="12, 72" Size="271, 40" TabIndex="0">
+    <Label Name="Label1" Location="83, 11" Text="Label1" Font="Microsoft Sans Serif, 12pt, style=Bold" ForeColor="ActiveCaption" TabIndex="0" />
+    <ProgressBar Name="ProgressBar1" Location="16, 11" Size="238, 23" TabIndex="1" />
+  </GroupBox>
+  <GroupBox Name="GroupBoxStatus" Location="12, 2" Size="271, 70" TabIndex="1">
+    <Button Name="btnLngApp" Location="15, 19" Size="42, 23" Text="ENG" TabIndex="0" Enabled="False" />
+    <Bitmap Name="Bitmap1" Location="6, 10" Size="259, 54" ImageFilename="C:\Users\Shen\Documents\Visual Studio 2012\Projects\LoLSeverSwichter\header.bmp" TabIndex="1" />
+  </GroupBox>
+  <GroupBox Name="GroupBoxDIR" Location="12, 110" Size="271, 70" TabIndex="2">
+    <Label Name="lblStatus" Location="141, 18" Text="Label2" ForeColor="DimGray" TabIndex="0" />
+    <Label Name="lblDir" Location="25, 18" Text="Label1" TabIndex="1" />
+    <DirRequest Name="DirRequest1" Location="16, 44" Size="238, 20" Text="ds" TabIndex="2" />
+  </GroupBox>
+  <GroupBox Name="GroupBoxSwichter" Location="12, 176" Size="271, 162" TabIndex="3" onChange="checkLoL">
+    <Bitmap Name="Bitmap3" Location="15, 65" Size="26, 26" ImageFilename="C:\Users\Shen\Pictures\locate.bmp" TabIndex="0" />
+    <Bitmap Name="Bitmap2" Location="16, 10" Size="25, 22" ImageFilename="C:\Users\Shen\Pictures\google_map_satellite.bmp" TabIndex="1" />
+    <Button Name="btnKill" Location="172, 129" Size="69, 28" Text="Kill LOL" TabIndex="2" onClick="onClickKILL" />
+    <Label Name="lblRegion" Location="47, 10" Size="86, 22" Text="Region" Font="Courier New, 12pt, style=Bold" TabIndex="3" />
+    <Label Name="lblLng" Location="47, 65" Size="102, 26" Text="Language" Font="Courier New, 12pt, style=Bold" TabIndex="4" />
+    <Button Name="btnSave" Location="16, 129" Size="69, 28" Text="Save" TabIndex="5" onClick="onClickSave" />
+    <DropList Name="DropListRegion" Location="16, 38" Size="238, 24" Font="Courier New, 9.75pt" TabIndex="6" SelectedItem="Russia">
+      <Items>
+        <value>Brazil</value>
+        <value>EU Nordic and East</value>
+        <value>EU West</value>
+        <value>Japan</value>
+        <value>Latin America North</value>
+        <value>Latin America South</value>
+        <value>North America</value>
+        <value>Oceania</value>
+        <value>Russia</value>
+        <value>Turkey</value>
+      </Items>
+    </DropList>
+    <DropList Name="DropListLng" Location="16, 97" Size="238, 24" Font="Courier New, 9.75pt" TabIndex="7" SelectedItem="Русский (Russia)">
+      <Items>
+        <value>Czech (Czechia)</value>
+        <value>German (Germany)</value>
+        <value>Greek (Greece)</value>
+        <value>English (Australia)</value>
+        <value>Русский (Russia)</value>
+        <value>English (United States)</value>
+        <value>English (United Kingdom)</value>
+        <value>Italian (Italy)</value>
+        <value>Spanish (Argentina)</value>
+        <value>Spanish (Spanish)</value>
+        <value>Spanish (Mexico)</value>
+        <value>French (Franch)</value>
+        <value>Hungarian (Hungary)</value>
+        <value>Japanese (Japan)</value>
+        <value>Korean (South Korea)</value>
+        <value>Polish (Poland)</value>
+        <value>Portuguese (Brazil)</value>
+        <value>Romanian (Romania)</value>
+        <value>Turkish (Turkey)</value>
+      </Items>
+    </DropList>
+  </GroupBox>
+  <GroupBox Name="GroupBox1" Location="3, -3" Size="297, 361" Text="GroupBox1" TabIndex="4" />
 </Dialog>
